@@ -152,4 +152,49 @@ const Pill = ({ children, tone = "neutral", icon }) => {
   );
 };
 
-Object.assign(window, { Icon, RiskDot, EnvBadge, ReadinessRing, SplitBars, Kbd, Pill });
+const LoadingSpinner = ({ size = "medium" }) => {
+  const sizeMap = {
+    small: 16,
+    medium: 24,
+    large: 32
+  };
+  const pixelSize = sizeMap[size] || 24;
+  
+  return (
+    <div className="loading-spinner" style={{ width: pixelSize, height: pixelSize }}>
+      <svg viewBox="0 0 50 50" style={{ width: '100%', height: '100%' }}>
+        <circle
+          cx="25"
+          cy="25"
+          r="20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="4"
+          strokeOpacity="0.3"
+        />
+        <circle
+          cx="25"
+          cy="25"
+          r="20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray="80"
+          strokeDashoffset="60"
+        >
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            from="0 25 25"
+            to="360 25 25"
+            dur="1s"
+            repeatCount="indefinite"
+          />
+        </circle>
+      </svg>
+    </div>
+  );
+};
+
+Object.assign(window, { Icon, RiskDot, EnvBadge, ReadinessRing, SplitBars, Kbd, Pill, LoadingSpinner });

@@ -1,10 +1,14 @@
 // Dashboard view — quarter header, launches table, mini timeline
 
 const QuarterHeader = ({ launches }) => {
-  const { state } = useStateContext();
+  const { state, dispatch } = useStateContext();
   const atRisk = launches.filter(l => l.risk !== "green").length;
   const onTrack = launches.length - atRisk;
   const avgReadiness = Math.round(launches.reduce((a,l) => a+l.readiness, 0) / launches.length);
+
+  const openNewLaunchModal = () => {
+    dispatch({ type: "OPEN_NEW_LAUNCH_MODAL" });
+  };
 
   // Format sync time
   const formatSyncTime = (date) => {
@@ -44,6 +48,12 @@ const QuarterHeader = ({ launches }) => {
           </span>
         </div>
       </div>
+      <div className="qhdr-actions">
+        <button className="sp-btn sp-btn-primary" onClick={openNewLaunchModal}>
+          <Icon name="plus" size={14}/>
+          New Launch
+        </button>
+      </div>
       <div className="qhdr-stats">
         {stats.map((s, i) => (
           <div key={i} className="qhdr-stat">
@@ -67,8 +77,15 @@ const QuarterHeader = ({ launches }) => {
 };
 
 const LaunchRow = ({ launch, onOpen, isActive }) => {
+  const [showTooltip, setShowTooltip] = React.useState(false);
+
   return (
-    <button className={`lrow ${isActive ? "is-active" : ""}`} onClick={() => onOpen(launch.id)}>
+    <button 
+      className={`lrow ${isActive ? "is-active" : ""}`} 
+      onClick={() => onOpen(launch.id)}
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+    >
       <div className="lrow-risk"><RiskDot level={launch.risk}/></div>
 
       <div className="lrow-id">
@@ -77,10 +94,10 @@ const LaunchRow = ({ launch, onOpen, isActive }) => {
       </div>
 
       <div className="lrow-name">
-        <div className="lrow-title">{launch.name}</div>
+        <div className="lrow-title text-truncate">{launch.name}</div>
         <div className="lrow-owners">
-          <span><span className="lrow-owner-tag">PM</span>{launch.owner.pm}</span>
-          <span><span className="lrow-owner-tag">PMM</span>{launch.owner.pmm}</span>
+          <span className="text-truncate"><span className="lrow-owner-tag">PM</span>{launch.owner.pm}</span>
+          <span className="text-truncate"><span className="lrow-owner-tag">PMM</span>{launch.owner.pmm}</span>
         </div>
       </div>
 
@@ -98,6 +115,26 @@ const LaunchRow = ({ launch, onOpen, isActive }) => {
             </span>
           )}
         </div>
+        {showTooltip && (
+          <div className="readiness-tooltip">
+            <div className="readiness-tooltip-header">
+              <strong>{launch.readiness}% Ready to Ship</strong>
+            </div>
+            <div className="readiness-tooltip-breakdown">
+              <div className="readiness-breakdown-item">
+                <span>Engineering:</span>
+                <span className="readiness-breakdown-value">{launch.eng}%</span>
+              </div>
+              <div className="readiness-breakdown-item">
+                <span>GTM:</span>
+                <span className="readiness-breakdown-value">{launch.gtm}%</span>
+              </div>
+            </div>
+            <div className="readiness-tooltip-hint">
+              Blended score of technical and go-to-market readiness
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="lrow-blockers">
@@ -206,8 +243,33 @@ const QuarterTimeline = ({ launches, onOpen, density }) => {
 const Dashboard = ({ launches, onOpen, density, view }) => {
   const { state, dispatch } = useStateContext();
 
+  const handleViewChange = (newView) => {
+    dispatch({ type: "SET_LOADING", payload: { isLoading: true, message: "Switching view..." } });
+    setTimeout(() => {
+      dispatch({ type: "SET_VIEW", payload: newView });
+      dispatch({ type: "SET_LOADING", payload: { isLoading: false } });
+    }, 300);
+  };
+
   return (
     <div className="dash">
+      {state.isLoading && (
+        <div className="loading-overlay">
+          <div className="loading-content">
+            <LoadingSpinner size="large"/>
+            <div className="loading-text">{state.loadingMessage || "Loading..."}</div>
+          </div>
+        </div>
+      )}
+      {state.error && (
+        <div className="error-banner">
+          <Icon name="alert" size={16}/>
+          <span className="error-message">{state.errorMessage || "An error occurred"}</span>
+          <button className="error-close" onClick={() => dispatch({ type: "CLEAR_ERROR" })}>
+            <Icon name="x" size={14}/>
+          </button>
+        </div>
+      )}
       <QuarterHeader launches={launches}/>
 
       <div className="dash-tabs">
@@ -225,8 +287,33 @@ const Dashboard = ({ launches, onOpen, density, view }) => {
             </button>
           ))}
         </div>
-        <div className="dash-view-hint">
-          <Icon name="dot" size={10}/> Live · Jira · Linear · Asana · Figma · GitHub
+        <div className="dash-tabs-right">
+          <div className="view-switch">
+            <button 
+              className={view === "list" ? "is-active" : ""} 
+              onClick={() => handleViewChange("list")}
+              title="Table view"
+            >
+              <Icon name="list" size={14}/>
+            </button>
+            <button 
+              className={view === "board" ? "is-active" : ""} 
+              onClick={() => handleViewChange("board")}
+              title="Kanban board"
+            >
+              <Icon name="layout" size={14}/>
+            </button>
+            <button 
+              className={view === "timeline" ? "is-active" : ""} 
+              onClick={() => handleViewChange("timeline")}
+              title="Timeline view"
+            >
+              <Icon name="timeline" size={14}/>
+            </button>
+          </div>
+          <div className="dash-view-hint">
+            <Icon name="dot" size={10}/> Live · Jira · Linear · Asana · Figma · GitHub
+          </div>
         </div>
       </div>
 
@@ -288,37 +375,102 @@ const Dashboard = ({ launches, onOpen, density, view }) => {
 };
 
 const KanbanBoard = ({ launches, onOpen }) => {
+  const { dispatch } = useStateContext();
   const cols = [
     { id: "Local", label: "Local" },
     { id: "Staging", label: "Staging" },
     { id: "Canary", label: "Canary" },
     { id: "Production", label: "Production" },
   ];
+
+  const handleDragStart = (e, launchId) => {
+    e.dataTransfer.setData('launchId', launchId);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e, targetEnv) => {
+    e.preventDefault();
+    const launchId = e.dataTransfer.getData('launchId');
+    if (launchId) {
+      dispatch({ 
+        type: "UPDATE_LAUNCH", 
+        payload: { id: launchId, updates: { env: targetEnv } } 
+      });
+    }
+  };
+
+  const KanbanCard = ({ launch, onOpen }) => {
+    const [showTooltip, setShowTooltip] = React.useState(false);
+
+    return (
+      <div style={{ position: 'relative' }}>
+        <button 
+          className="kb-card" 
+          onClick={() => onOpen(launch.id)}
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+          draggable
+          onDragStart={(e) => handleDragStart(e, launch.id)}
+        >
+          <div className="kb-card-top">
+            <RiskDot level={launch.risk} size={7}/>
+            <span className="kb-card-code">{launch.code}</span>
+            <span className="kb-card-pillar">{launch.pillar}</span>
+          </div>
+          <div className="kb-card-title text-truncate-2">{launch.name}</div>
+          <div className="kb-card-bar"><div style={{ width: `${launch.readiness}%` }}/></div>
+          <div className="kb-card-foot">
+            <span>{launch.readiness}% ready</span>
+            <span>{launch.target}</span>
+          </div>
+        </button>
+        {showTooltip && (
+          <div className="readiness-tooltip" style={{ bottom: 'auto', top: 'calc(100% + 8px)' }}>
+            <div className="readiness-tooltip-header">
+              <strong>{launch.readiness}% Ready to Ship</strong>
+            </div>
+            <div className="readiness-tooltip-breakdown">
+              <div className="readiness-breakdown-item">
+                <span>Engineering:</span>
+                <span className="readiness-breakdown-value">{launch.eng}%</span>
+              </div>
+              <div className="readiness-breakdown-item">
+                <span>GTM:</span>
+                <span className="readiness-breakdown-value">{launch.gtm}%</span>
+              </div>
+            </div>
+            <div className="readiness-tooltip-hint">
+              Blended score of technical and go-to-market readiness
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="kb">
       {cols.map(col => {
         const items = launches.filter(l => l.env === col.id);
         return (
-          <div key={col.id} className="kb-col">
+          <div 
+            key={col.id} 
+            className="kb-col"
+            onDragOver={handleDragOver}
+            onDrop={(e) => handleDrop(e, col.id)}
+          >
             <div className="kb-col-head">
               <EnvBadge env={col.id}/>
               <span className="kb-col-count">{items.length}</span>
             </div>
             <div className="kb-col-body">
               {items.map(l => (
-                <button key={l.id} className="kb-card" onClick={() => onOpen(l.id)}>
-                  <div className="kb-card-top">
-                    <RiskDot level={l.risk} size={7}/>
-                    <span className="kb-card-code">{l.code}</span>
-                    <span className="kb-card-pillar">{l.pillar}</span>
-                  </div>
-                  <div className="kb-card-title">{l.name}</div>
-                  <div className="kb-card-bar"><div style={{ width: `${l.readiness}%` }}/></div>
-                  <div className="kb-card-foot">
-                    <span>{l.readiness}% ready</span>
-                    <span>{l.target}</span>
-                  </div>
-                </button>
+                <KanbanCard key={l.id} launch={l} onOpen={onOpen}/>
               ))}
               {items.length === 0 && <div className="kb-empty">—</div>}
             </div>

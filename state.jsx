@@ -10,6 +10,7 @@ const initialState = {
   // Navigation
   activeNav: "home",
   openLaunchId: null,
+  view: "list", // list, board, timeline
   
   // Search & Filters
   searchQuery: "",
@@ -20,6 +21,10 @@ const initialState = {
   // UI State
   commandPaletteOpen: false,
   newLaunchModalOpen: false,
+  isLoading: false,
+  loadingMessage: "",
+  error: null,
+  errorMessage: "",
   
   // Real-time sync simulation
   lastSyncTime: new Date(),
@@ -37,6 +42,9 @@ function stateReducer(state, action) {
     
     case "CLOSE_LAUNCH":
       return { ...state, openLaunchId: null };
+    
+    case "SET_VIEW":
+      return { ...state, view: action.payload };
     
     // Search & Filters
     case "SET_SEARCH_QUERY":
@@ -131,6 +139,15 @@ function stateReducer(state, action) {
     case "CLOSE_NEW_LAUNCH_MODAL":
       return { ...state, newLaunchModalOpen: false };
     
+    case "SET_LOADING":
+      return { ...state, isLoading: action.payload.isLoading, loadingMessage: action.payload.message || "" };
+    
+    case "SET_ERROR":
+      return { ...state, error: action.payload.error, errorMessage: action.payload.message || "" };
+    
+    case "CLEAR_ERROR":
+      return { ...state, error: null, errorMessage: "" };
+    
     // Sync Status
     case "SET_SYNC_STATUS":
       return { ...state, syncStatus: action.payload };
@@ -150,18 +167,26 @@ function StateProvider({ children }) {
   const filteredLaunches = React.useMemo(() => {
     let result = state.launches;
     
-    // Search filter
+    // Search filter - enhanced to include more fields
     if (state.searchQuery) {
       const query = state.searchQuery.toLowerCase();
       result = result.filter(l => 
         l.name.toLowerCase().includes(query) ||
         l.code.toLowerCase().includes(query) ||
+        l.pillar.toLowerCase().includes(query) ||
         l.owner.pm.toLowerCase().includes(query) ||
         l.owner.pmm.toLowerCase().includes(query) ||
-        l.tickets.some(t => 
+        l.owner.eng.toLowerCase().includes(query) ||
+        l.target.toLowerCase().includes(query) ||
+        (l.summary && l.summary.some(s => s.toLowerCase().includes(query))) ||
+        (l.tickets && l.tickets.some(t => 
           t.title.toLowerCase().includes(query) ||
           t.id.toLowerCase().includes(query)
-        )
+        )) ||
+        (l.assets && l.assets.some(a => 
+          a.title.toLowerCase().includes(query) ||
+          a.source.toLowerCase().includes(query)
+        ))
       );
     }
     
@@ -197,6 +222,19 @@ function StateProvider({ children }) {
         dispatch({ type: state.commandPaletteOpen ? "CLOSE_COMMAND_PALETTE" : "OPEN_COMMAND_PALETTE" });
       }
       
+      // New Launch: Cmd+N or Ctrl+N
+      if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
+        e.preventDefault();
+        dispatch({ type: "OPEN_NEW_LAUNCH_MODAL" });
+      }
+      
+      // Focus search: / (when not in input)
+      if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+        e.preventDefault();
+        const searchInput = document.querySelector('.sp-search input');
+        if (searchInput) searchInput.focus();
+      }
+      
       // Escape to close modals
       if (e.key === 'Escape') {
         if (state.commandPaletteOpen) {
@@ -208,6 +246,20 @@ function StateProvider({ children }) {
         if (state.openLaunchId) {
           dispatch({ type: "CLOSE_LAUNCH" });
         }
+      }
+      
+      // View switching: Cmd+1, Cmd+2, Cmd+3
+      if ((e.metaKey || e.ctrlKey) && e.key === '1') {
+        e.preventDefault();
+        dispatch({ type: "SET_VIEW", payload: "list" });
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === '2') {
+        e.preventDefault();
+        dispatch({ type: "SET_VIEW", payload: "board" });
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === '3') {
+        e.preventDefault();
+        dispatch({ type: "SET_VIEW", payload: "timeline" });
       }
     };
     

@@ -34,7 +34,7 @@ const Sidebar = ({ active, onNav }) => {
           <div className="sp-brand-name">SyncPoint</div>
           <div className="sp-brand-org">Lattice · Q2</div>
         </div>
-        <button className="sp-cmd" title="Command palette (⌘K)" onClick={openCommandPalette}>
+        <button className="sp-cmd" title="Command palette (⌘K) · Shortcuts: ⌘N (New), / (Search), ⌘1-3 (Views)" onClick={openCommandPalette}>
           <Icon name="command" size={12}/>
         </button>
       </div>
@@ -176,6 +176,7 @@ const Sidebar = ({ active, onNav }) => {
 
 const TopBar = ({ launch, onBack, onFilterClick, onNewLaunchClick }) => {
   const { state, dispatch } = useStateContext();
+  const hasActiveFilters = state.filterPillar !== "All" || state.filterRisk || state.filterEnv;
   
   const handleSearchChange = (e) => {
     dispatch({ type: "SET_SEARCH_QUERY", payload: e.target.value });
@@ -207,8 +208,13 @@ const TopBar = ({ launch, onBack, onFilterClick, onNewLaunchClick }) => {
           )}
           <Kbd>⌘K</Kbd>
         </div>
-        <button className="sp-btn sp-btn-ghost" onClick={onFilterClick}>
-          <Icon name="filter" size={13}/>Filter
+        <button 
+          className={`sp-btn ${hasActiveFilters ? "sp-btn-secondary" : "sp-btn-ghost"}`} 
+          onClick={onFilterClick}
+        >
+          <Icon name="filter" size={13}/>
+          Filter
+          {hasActiveFilters && <span className="filter-active-dot"/>}
         </button>
         <button className="sp-btn sp-btn-primary" onClick={onNewLaunchClick}>
           <Icon name="plus" size={13}/>New launch

@@ -66,8 +66,8 @@
       };
 
       // map nav → view
-      const viewMap = { home: "list", timeline: "timeline" };
-      const dashView = viewMap[state.activeNav] || t.view;
+      const viewMap = { home: state.view, timeline: "timeline" };
+      const dashView = viewMap[state.activeNav] || state.view;
 
       // apply accent globally
       React.useEffect(() => {
