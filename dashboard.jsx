@@ -242,18 +242,46 @@ const Dashboard = ({ launches, onOpen, density, view }) => {
             <div>Target</div>
             <div></div>
           </div>
-          {launches.map(l => (
-            <LaunchRow key={l.id} launch={l} onOpen={onOpen}/>
-          ))}
+          {launches.length === 0 ? (
+            <div className="ltable-empty">
+              <Icon name="search" size={32} style={{ color: "var(--fg-3)" }}/>
+              <div className="ltable-empty-title">No launches found</div>
+              <div className="ltable-empty-sub">Try adjusting your filters or search query</div>
+            </div>
+          ) : (
+            launches.map(l => (
+              <LaunchRow key={l.id} launch={l} onOpen={onOpen}/>
+            ))
+          )}
         </div>
       )}
 
       {view === "timeline" && (
-        <QuarterTimeline launches={launches} onOpen={onOpen} density={density}/>
+        <>
+          {launches.length === 0 ? (
+            <div className="view-empty">
+              <Icon name="timeline" size={32} style={{ color: "var(--fg-3)" }}/>
+              <div className="view-empty-title">No launches to display</div>
+              <div className="view-empty-sub">Try adjusting your filters or search query</div>
+            </div>
+          ) : (
+            <QuarterTimeline launches={launches} onOpen={onOpen} density={density}/>
+          )}
+        </>
       )}
 
       {view === "board" && (
-        <KanbanBoard launches={launches} onOpen={onOpen}/>
+        <>
+          {launches.length === 0 ? (
+            <div className="view-empty">
+              <Icon name="layout" size={32} style={{ color: "var(--fg-3)" }}/>
+              <div className="view-empty-title">No launches to display</div>
+              <div className="view-empty-sub">Try adjusting your filters or search query</div>
+            </div>
+          ) : (
+            <KanbanBoard launches={launches} onOpen={onOpen}/>
+          )}
+        </>
       )}
     </div>
   );

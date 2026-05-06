@@ -9,6 +9,17 @@ const Sidebar = ({ active, onNav }) => {
     dispatch({ type: "OPEN_COMMAND_PALETTE" });
   };
   
+  const handleNotificationClick = (launchId) => {
+    dispatch({ type: "SET_OPEN_LAUNCH", payload: launchId });
+    setShowNotifications(false);
+  };
+  
+  const handleProfileAction = (action) => {
+    setShowProfile(false);
+    // In a real app, these would navigate to different pages
+    console.log('Profile action:', action);
+  };
+  
   return (
     <aside className="sp-sidebar">
       <div className="sp-brand">
@@ -80,21 +91,21 @@ const Sidebar = ({ active, onNav }) => {
                   </div>
                 </div>
                 <div className="sp-dropdown-body">
-                  <button className="sp-dropdown-item">
+                  <button className="sp-dropdown-item" onClick={() => handleProfileAction('settings')}>
                     <Icon name="user" size={14}/>
                     <span>Profile settings</span>
                   </button>
-                  <button className="sp-dropdown-item">
+                  <button className="sp-dropdown-item" onClick={() => handleProfileAction('preferences')}>
                     <Icon name="settings" size={14}/>
                     <span>Preferences</span>
                   </button>
-                  <button className="sp-dropdown-item">
+                  <button className="sp-dropdown-item" onClick={() => handleProfileAction('help')}>
                     <Icon name="help" size={14}/>
                     <span>Help & support</span>
                   </button>
                 </div>
                 <div className="sp-dropdown-footer">
-                  <button className="sp-dropdown-item sp-dropdown-item-danger">
+                  <button className="sp-dropdown-item sp-dropdown-item-danger" onClick={() => handleProfileAction('logout')}>
                     <Icon name="logout" size={14}/>
                     <span>Sign out</span>
                   </button>
@@ -123,7 +134,7 @@ const Sidebar = ({ active, onNav }) => {
               <div className="sp-dropdown sp-dropdown-notifications">
                 <div className="sp-dropdown-header">Notifications</div>
                 <div className="sp-dropdown-body">
-                  <div className="sp-notification-item">
+                  <div className="sp-notification-item" onClick={() => handleNotificationClick("lnch-glide")}>
                     <div className="sp-notification-icon" style={{ background: 'color-mix(in oklab, var(--risk-green) 15%, transparent)' }}>
                       <Icon name="check" size={12}/>
                     </div>
@@ -132,7 +143,7 @@ const Sidebar = ({ active, onNav }) => {
                       <div className="sp-notification-time">2 hours ago</div>
                     </div>
                   </div>
-                  <div className="sp-notification-item">
+                  <div className="sp-notification-item" onClick={() => handleNotificationClick("lnch-atlas")}>
                     <div className="sp-notification-icon" style={{ background: 'color-mix(in oklab, var(--risk-yellow) 15%, transparent)' }}>
                       <Icon name="alert" size={12}/>
                     </div>
@@ -141,7 +152,7 @@ const Sidebar = ({ active, onNav }) => {
                       <div className="sp-notification-time">5 hours ago</div>
                     </div>
                   </div>
-                  <div className="sp-notification-item">
+                  <div className="sp-notification-item" onClick={() => handleNotificationClick("lnch-nimbus")}>
                     <div className="sp-notification-icon" style={{ background: 'color-mix(in oklab, var(--accent) 15%, transparent)' }}>
                       <Icon name="sparkle" size={12}/>
                     </div>

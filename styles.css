@@ -6,6 +6,9 @@
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
   --font-display: "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif;
 
+  /* Focus ring */
+  --focus-ring: 0 0 0 2px var(--bg-1), 0 0 0 4px var(--accent);
+
   /* Neutrals — warm slate */
   --bg-0: #FAFAF8;     /* page */
   --bg-1: #FFFFFF;     /* cards */
@@ -81,6 +84,22 @@ body {
 
 button { font-family: inherit; cursor: pointer; }
 code, kbd { font-family: var(--font-mono); }
+
+/* Focus styles */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+button:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+select:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible) {
+  outline: none;
+}
 
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
@@ -281,10 +300,10 @@ button:hover {
   overflow: hidden;
 }
 
-.sp-nav-item:hover { 
-  background: var(--bg-3); 
+.sp-nav-item:hover {
+  background: var(--bg-3);
   color: var(--fg-1);
-  transform: translateX(4px);
+  transform: scale(1.02);
 }
 
 .sp-nav-item.is-active {
@@ -473,6 +492,10 @@ button:hover {
   color: var(--fg-1);
   margin-bottom: 2px;
   line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
 }
 
 .sp-notification-time {
@@ -1810,6 +1833,10 @@ button:hover {
   font-size: 13px; font-weight: 500;
   color: var(--fg-1);
   letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 .lrow-owners { display: flex; gap: 12px; font-size: 11px; color: var(--fg-3); margin-top: 2px; }
 .lrow-owner-tag {
@@ -1887,13 +1914,68 @@ button:hover {
 .lrow-arrow { color: var(--fg-4); }
 .lrow:hover .lrow-arrow { color: var(--fg-1); }
 
+.ltable-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+  text-align: center;
+}
+
+.ltable-empty-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-1);
+}
+
+.ltable-empty-sub {
+  font-size: 12px;
+  color: var(--fg-3);
+}
+
+.view-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  gap: 16px;
+  text-align: center;
+}
+
+.view-empty-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-1);
+}
+
+.view-empty-sub {
+  font-size: 12px;
+  color: var(--fg-3);
+}
+
 /* ============= TIMELINE (Gantt) ============= */
 
 .tl {
   border: 1px solid var(--border-1);
   border-radius: 12px;
   background: var(--bg-1);
-  overflow: hidden;
+  overflow-x: auto;
+  min-width: fit-content;
+}
+
+@media (max-width: 768px) {
+  .tl {
+    padding-bottom: 20px;
+  }
+  
+  .tl-head,
+  .tl-body {
+    min-width: 600px;
+  }
+}
 }
 .tl-head {
   display: grid;
@@ -2040,7 +2122,20 @@ button:hover {
 
 /* ============= KANBAN ============= */
 
-.kb { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.kb { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; overflow-x: auto; min-width: fit-content; }
+
+@media (max-width: 1024px) {
+  .kb {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .kb {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
 .kb-col {
   background: var(--bg-2);
   border-radius: 12px;
