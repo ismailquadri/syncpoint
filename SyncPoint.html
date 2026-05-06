@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=1440"/>
+  <title>SyncPoint — GTM Orchestrator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"/>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" src="data.jsx"></script>
+  <script type="text/babel" src="primitives.jsx"></script>
+  <script type="text/babel" src="shell.jsx"></script>
+  <script type="text/babel" src="dashboard.jsx"></script>
+  <script type="text/babel" src="launch-detail.jsx"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+
+  <script type="text/babel">
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "accent": "#C2410C",
+      "density": "regular",
+      "view": "list"
+    }/*EDITMODE-END*/;
+
+    function App() {
+      const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+      const [activeNav, setActiveNav] = React.useState("home");
+      const [openId, setOpenId] = React.useState(null);
+
+      // when nav clicks pass a launch id from sidebar pinned list
+      const onNav = (id, launchId) => {
+        setActiveNav(id);
+        if (launchId) setOpenId(launchId);
+        else setOpenId(null);
+      };
+
+      const launches = window.SP_DATA.LAUNCHES;
+      const openLaunch = launches.find(l => l.id === openId);
+
+      // map nav → view
+      const viewMap = { home: "list", timeline: "timeline" };
+      const dashView = viewMap[activeNav] || t.view;
+
+      // apply accent globally
+      React.useEffect(() => {
+        document.documentElement.style.setProperty("--accent", t.accent);
+      }, [t.accent]);
+
+      return (
+        <div className={`sp-app ${t.density === "compact" ? "is-compact" : ""}`}>
+          <Sidebar active={activeNav} onNav={onNav}/>
+          <div className="sp-main">
+            <TopBar launch={openLaunch} onBack={() => setOpenId(null)}/>
+            <div className="sp-content">
+              {openLaunch ? (
+                <LaunchDetail launch={openLaunch} onBack={() => setOpenId(null)}/>
+              ) : (
+                <Dashboard
+                  launches={launches}
+                  onOpen={(id) => setOpenId(id)}
+                  density={t.density}
+                  view={activeNav === "timeline" ? "timeline" : t.view}
+                />
+              )}
+            </div>
+          </div>
+
+          <TweaksPanel>
+            <TweakSection label="Theme"/>
+            <TweakColor label="Accent" value={t.accent}
+              options={["#5546E5", "#0A6E4D", "#C2410C", "#1F2937"]}
+              onChange={(v) => setTweak("accent", v)}/>
+            <TweakSection label="Layout"/>
+            <TweakRadio label="Density" value={t.density}
+              options={["compact", "regular"]}
+              onChange={(v) => setTweak("density", v)}/>
+            <TweakRadio label="Default view" value={t.view}
+              options={["list", "timeline", "board"]}
+              onChange={(v) => setTweak("view", v)}/>
+          </TweaksPanel>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App/>);
+  </script>
+</body>
+</html>
