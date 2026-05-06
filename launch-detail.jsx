@@ -213,18 +213,19 @@ const AssetSuggestions = ({ launch }) => {
 };
 
 const Dependencies = ({ launch }) => {
-  const [deps, setDeps] = React.useState(launch.deps);
+  const { dispatch } = useStateContext();
   const toggle = (id) => {
-    setDeps(ds => ds.map(d => {
-      if (d.id !== id) return d;
-      const next = d.status === "done" ? "in-progress" : "done";
-      return { ...d, status: next };
-    }));
+    const dep = launch.deps.find(d => d.id === id);
+    const nextStatus = dep.status === "done" ? "in-progress" : "done";
+    dispatch({ 
+      type: "UPDATE_LAUNCH_DEPENDENCY", 
+      payload: { launchId: launch.id, depId: id, status: nextStatus }
+    });
   };
   const tones = { done: "ok", "in-progress": "warn", blocked: "danger", todo: "neutral" };
   const labels = { done: "Done", "in-progress": "In progress", blocked: "Blocked", todo: "Not started" };
 
-  const blocking = deps.filter(d => d.hard && d.status !== "done");
+  const blocking = launch.deps.filter(d => d.hard && d.status !== "done");
 
   return (
     <Section
@@ -242,7 +243,7 @@ const Dependencies = ({ launch }) => {
       }
     >
       <div className="deps">
-        {deps.map(d => (
+        {launch.deps.map(d => (
           <div key={d.id} className={`dep dep-${d.status}`}>
             <button className="dep-check" onClick={() => toggle(d.id)} aria-pressed={d.status === "done"}>
               {d.status === "done" && <Icon name="check" size={12} stroke={2.5}/>}
@@ -357,30 +358,82 @@ const QuickRail = ({ launch }) => {
 };
 
 const LaunchDetail = ({ launch, onBack }) => {
+  const { dispatch } = useStateContext();
+  const [activeTab, setActiveTab] = React.useState(0);
+  const tabs = ["Overview", "Engineering", "GTM Assets", "Dependencies", "Activity"];
+  
+  const handleBack = () => {
+    dispatch({ type: "CLOSE_LAUNCH" });
+    if (onBack) onBack();
+  };
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 0: // Overview
+        return (
+          <>
+            <ReadinessCard launch={launch}/>
+            <AIBridge launch={launch}/>
+            <Dependencies launch={launch}/>
+            <ActivityFeed launch={launch}/>
+          </>
+        );
+      case 1: // Engineering
+        return (
+          <>
+            <ReadinessCard launch={launch}/>
+            <TicketTable launch={launch}/>
+          </>
+        );
+      case 2: // GTM Assets
+        return (
+          <>
+            <ReadinessCard launch={launch}/>
+            <AssetSuggestions launch={launch}/>
+          </>
+        );
+      case 3: // Dependencies
+        return (
+          <>
+            <ReadinessCard launch={launch}/>
+            <Dependencies launch={launch}/>
+          </>
+        );
+      case 4: // Activity
+        return (
+          <>
+            <ReadinessCard launch={launch}/>
+            <ActivityFeed launch={launch}/>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="ldetail">
       <div className="ldetail-back">
-        <button className="sp-btn sp-btn-ghost" onClick={onBack}>
+        <button className="sp-btn sp-btn-ghost" onClick={handleBack}>
           <Icon name="chevron-right" size={13} style={{ transform: "rotate(180deg)" }}/>
           Back to launches
         </button>
         <div className="ldetail-tabs">
-          {["Overview", "Engineering", "GTM Assets", "Dependencies", "Activity"].map((t, i) => (
-            <button key={t} className={`ldetail-tab ${i === 0 ? "is-active" : ""}`}>{t}</button>
+          {tabs.map((tab, i) => (
+            <button 
+              key={tab} 
+              className={`ldetail-tab ${i === activeTab ? "is-active" : ""}`}
+              onClick={() => setActiveTab(i)}
+            >
+              {tab}
+            </button>
           ))}
         </div>
       </div>
 
       <div className="ldetail-grid">
         <div className="ldetail-main">
-          <ReadinessCard launch={launch}/>
-          <AIBridge launch={launch}/>
-          <Dependencies launch={launch}/>
-          <div className="ldetail-2col">
-            <TicketTable launch={launch}/>
-            <AssetSuggestions launch={launch}/>
-          </div>
-          <ActivityFeed launch={launch}/>
+          {renderTabContent()}
         </div>
         <QuickRail launch={launch}/>
       </div>

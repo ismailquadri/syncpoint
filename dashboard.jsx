@@ -1,9 +1,21 @@
 // Dashboard view — quarter header, launches table, mini timeline
 
 const QuarterHeader = ({ launches }) => {
+  const { state } = useStateContext();
   const atRisk = launches.filter(l => l.risk !== "green").length;
   const onTrack = launches.length - atRisk;
   const avgReadiness = Math.round(launches.reduce((a,l) => a+l.readiness, 0) / launches.length);
+
+  // Format sync time
+  const formatSyncTime = (date) => {
+    if (!date) return "Never";
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000); // seconds
+    
+    if (diff < 60) return `${diff}s ago`;
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    return `${Math.floor(diff / 3600)}h ago`;
+  };
 
   const stats = [
     { label: "In flight", value: launches.length, hint: "active launches" },
@@ -23,7 +35,13 @@ const QuarterHeader = ({ launches }) => {
           <span className="qhdr-dot"/>
           <span>Quarter ends in <b>56 days</b></span>
           <span className="qhdr-dot"/>
-          <span>Last sync from Jira: <b>2 min ago</b> · <a href="#" className="qhdr-link">view sources</a></span>
+          <span>
+            Last sync: <b>{formatSyncTime(state.lastSyncTime)}</b>
+            {state.syncStatus === "syncing" && <span className="sync-indicator syncing"/>}
+            {state.syncStatus === "connected" && <span className="sync-indicator connected"/>}
+            {state.syncStatus === "error" && <span className="sync-indicator error"/>}
+            · <a href="#" className="qhdr-link">view sources</a>
+          </span>
         </div>
       </div>
       <div className="qhdr-stats">
@@ -186,8 +204,7 @@ const QuarterTimeline = ({ launches, onOpen, density }) => {
 };
 
 const Dashboard = ({ launches, onOpen, density, view }) => {
-  const [pillar, setPillar] = React.useState("All");
-  const filtered = pillar === "All" ? launches : launches.filter(l => l.pillar === pillar);
+  const { state, dispatch } = useStateContext();
 
   return (
     <div className="dash">
@@ -198,8 +215,8 @@ const Dashboard = ({ launches, onOpen, density, view }) => {
           {window.SP_DATA.PILLARS.map(p => (
             <button
               key={p}
-              className={`dash-pillar ${pillar === p ? "is-active" : ""}`}
-              onClick={() => setPillar(p)}
+              className={`dash-pillar ${state.filterPillar === p ? "is-active" : ""}`}
+              onClick={() => dispatch({ type: "SET_FILTER_PILLAR", payload: p })}
             >
               {p}
               {p !== "All" && (
@@ -225,18 +242,18 @@ const Dashboard = ({ launches, onOpen, density, view }) => {
             <div>Target</div>
             <div></div>
           </div>
-          {filtered.map(l => (
+          {launches.map(l => (
             <LaunchRow key={l.id} launch={l} onOpen={onOpen}/>
           ))}
         </div>
       )}
 
       {view === "timeline" && (
-        <QuarterTimeline launches={filtered} onOpen={onOpen} density={density}/>
+        <QuarterTimeline launches={launches} onOpen={onOpen} density={density}/>
       )}
 
       {view === "board" && (
-        <KanbanBoard launches={filtered} onOpen={onOpen}/>
+        <KanbanBoard launches={launches} onOpen={onOpen}/>
       )}
     </div>
   );

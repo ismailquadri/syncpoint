@@ -64,23 +64,48 @@ const Sidebar = ({ active, onNav }) => {
   );
 };
 
-const TopBar = ({ launch, onBack }) => (
-  <div className="sp-topbar">
-    <div className="sp-crumbs">
-      <button className="sp-crumb" onClick={onBack}>Launches</button>
-      <Icon name="chevron-right" size={12} style={{ color: "var(--fg-4)" }}/>
-      <span className="sp-crumb is-current">{launch ? launch.name : "All"}</span>
-    </div>
-    <div className="sp-top-actions">
-      <div className="sp-search">
-        <Icon name="search" size={13}/>
-        <input placeholder="Search launches, tickets, assets…"/>
-        <Kbd>⌘K</Kbd>
+const TopBar = ({ launch, onBack, onFilterClick, onNewLaunchClick }) => {
+  const { state, dispatch } = useStateContext();
+  
+  const handleSearchChange = (e) => {
+    dispatch({ type: "SET_SEARCH_QUERY", payload: e.target.value });
+  };
+
+  const clearSearch = () => {
+    dispatch({ type: "SET_SEARCH_QUERY", payload: "" });
+  };
+
+  return (
+    <div className="sp-topbar">
+      <div className="sp-crumbs">
+        <button className="sp-crumb" onClick={onBack}>Launches</button>
+        <Icon name="chevron-right" size={12} style={{ color: "var(--fg-4)" }}/>
+        <span className="sp-crumb is-current">{launch ? launch.name : "All"}</span>
       </div>
-      <button className="sp-btn sp-btn-ghost"><Icon name="filter" size={13}/>Filter</button>
-      <button className="sp-btn sp-btn-primary"><Icon name="plus" size={13}/>New launch</button>
+      <div className="sp-top-actions">
+        <div className="sp-search">
+          <Icon name="search" size={13}/>
+          <input 
+            placeholder="Search launches, tickets, assets…"
+            value={state.searchQuery}
+            onChange={handleSearchChange}
+          />
+          {state.searchQuery && (
+            <button className="sp-search-clear" onClick={clearSearch}>
+              <Icon name="x" size={12}/>
+            </button>
+          )}
+          <Kbd>⌘K</Kbd>
+        </div>
+        <button className="sp-btn sp-btn-ghost" onClick={onFilterClick}>
+          <Icon name="filter" size={13}/>Filter
+        </button>
+        <button className="sp-btn sp-btn-primary" onClick={onNewLaunchClick}>
+          <Icon name="plus" size={13}/>New launch
+        </button>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 Object.assign(window, { Sidebar, TopBar });
