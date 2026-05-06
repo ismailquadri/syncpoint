@@ -70,7 +70,7 @@ const ReadinessCard = ({ launch }) => {
   );
 };
 
-// AI Bridge panel — streaming summary + asset suggestions
+// AI Bridge panel — streaming summary + asset suggestions (Lovable layout with native style)
 const AIBridge = ({ launch }) => {
   const [phase, setPhase] = React.useState("idle"); // idle | streaming | done
   const [shown, setShown] = React.useState(0);
@@ -110,7 +110,7 @@ const AIBridge = ({ launch }) => {
       action={
         <div className="bridge-actions">
           {phase === "idle" && (
-            <button className="sp-btn sp-btn-primary" onClick={run}>
+            <button className="sp-btn sp-btn-primary animate-scale" onClick={run}>
               <Icon name="sparkle" size={13}/> Generate from spec
             </button>
           )}
@@ -121,8 +121,8 @@ const AIBridge = ({ launch }) => {
           )}
           {phase === "done" && !approved && (
             <>
-              <button className="sp-btn sp-btn-ghost" onClick={run}><Icon name="sparkle" size={12}/>Regenerate</button>
-              <button className="sp-btn sp-btn-primary" onClick={() => setApproved(true)}>
+              <button className="sp-btn sp-btn-ghost animate-scale" onClick={run}><Icon name="sparkle" size={12}/>Regenerate</button>
+              <button className="sp-btn sp-btn-primary animate-scale" onClick={() => setApproved(true)}>
                 <Icon name="check" size={13}/> Approve as copy
               </button>
             </>
@@ -131,16 +131,19 @@ const AIBridge = ({ launch }) => {
         </div>
       }
     >
-      <div className="bridge">
-        <div className="bridge-source">
-          <Icon name="doc" size={13}/>
-          <span><b>Source:</b> PRD-204 · v1.4 · last edited by Priya S. 2d ago</span>
-          <a href="#" className="bridge-source-link">Open<Icon name="external" size={11}/></a>
+      <div className="bridge-native">
+        <div className="bridge-native-source">
+          <div className="bridge-source-icon"><Icon name="doc" size={16}/></div>
+          <div className="bridge-source-content">
+            <span className="bridge-source-label">Source</span>
+            <span className="bridge-source-name">PRD-204 · v1.4</span>
+          </div>
+          <a href="#" className="bridge-source-link">Open <Icon name="external" size={11}/></a>
         </div>
 
-        <div className={`bridge-out ${phase === "idle" ? "is-empty" : ""} ${approved ? "is-approved" : ""}`}>
-          <div className="bridge-out-head">
-            <div className="bridge-out-title">
+        <div className={`bridge-native-content ${phase === "idle" ? "is-empty" : ""} ${approved ? "is-approved" : ""}`}>
+          <div className="bridge-content-header">
+            <div className="bridge-content-title">
               {approved ? "Approved copy — User value" : "Draft — User value"}
             </div>
             <Pill tone={approved ? "ok" : "warn"}>
@@ -149,25 +152,36 @@ const AIBridge = ({ launch }) => {
           </div>
 
           {phase === "idle" ? (
-            <div className="bridge-empty">
-              <Icon name="sparkle" size={18}/>
-              <div>
+            <div className="bridge-empty-native">
+              <div className="bridge-empty-icon"><Icon name="sparkle" size={32}/></div>
+              <div className="bridge-empty-content">
                 <div className="bridge-empty-title">No summary yet</div>
                 <div className="bridge-empty-sub">The Bridge will turn PRD-204 into 3–5 marketing-ready bullets. You stay in control — drafts are never auto-published.</div>
               </div>
             </div>
           ) : (
-            <ul className="bridge-bullets">
-              {visible.map((s, i) => s ? <li key={i}>{s}</li> : null)}
+            <ul className="bridge-bullets-native">
+              {visible.map((s, i) => s ? (
+                <li key={i} className="bridge-bullet-native animate-slide">
+                  <span className="bridge-bullet-icon"><Icon name="dot" size={6}/></span>
+                  <span>{s}</span>
+                </li>
+              ) : null)}
             </ul>
           )}
         </div>
 
         {phase === "done" && (
-          <div className="bridge-meta">
-            <span><Icon name="git-merge" size={12}/> Inferred from <b>4 commits</b> on <b>main</b></span>
-            <span><Icon name="dot" size={9}/> Tone: <b>Plain · enterprise</b></span>
-            <span><Icon name="dot" size={9}/> Reading level: <b>Grade 9</b></span>
+          <div className="bridge-meta-native">
+            <div className="bridge-meta-item">
+              <Icon name="git-merge" size={12}/> Inferred from <b>4 commits</b> on <b>main</b>
+            </div>
+            <div className="bridge-meta-item">
+              <Icon name="dot" size={9}/> Tone: <b>Plain · enterprise</b>
+            </div>
+            <div className="bridge-meta-item">
+              <Icon name="dot" size={9}/> Reading level: <b>Grade 9</b>
+            </div>
           </div>
         )}
       </div>

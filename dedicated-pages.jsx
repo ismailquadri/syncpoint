@@ -11,28 +11,32 @@ const AIBridgePage = () => {
       </div>
       
       <div className="page-content">
-        <div className="bridge-grid">
-          {state.launches.filter(l => l.summary && l.summary.length > 0).map(launch => (
-            <div key={launch.id} className="bridge-card">
-              <div className="bridge-card-header">
+        <div className="bridge-grid-native">
+          {state.launches.filter(l => l.summary && l.summary.length > 0).map((launch, index) => (
+            <div key={launch.id} className="bridge-card-native animate-fade" style={{ animationDelay: `${index * 0.08}s` }}>
+              <div className="bridge-card-header-native">
+                <div className="bridge-card-icon"><Icon name="rocket" size={24}/></div>
                 <div className="bridge-card-title">{launch.name}</div>
                 <Pill tone="ghost">{launch.code}</Pill>
               </div>
-              <div className="bridge-card-body">
-                <ul className="bridge-bullets">
+              <div className="bridge-card-body-native">
+                <ul className="bridge-bullets-native">
                   {launch.summary.map((point, i) => (
-                    <li key={i}>{point}</li>
+                    <li key={i} className="bridge-bullet-native animate-slide">
+                      <span className="bridge-bullet-icon"><Icon name="dot" size={6}/></span>
+                      <span>{point}</span>
+                    </li>
                   ))}
                 </ul>
               </div>
-              <div className="bridge-card-footer">
+              <div className="bridge-card-footer-native">
                 <button 
-                  className="sp-btn sp-btn-ghost"
+                  className="sp-btn sp-btn-ghost animate-scale"
                   onClick={() => {
                     // Would navigate to launch detail with AI Bridge tab
                   }}
                 >
-                  View in launch →
+                  View in launch <Icon name="arrow-right" size={12}/>
                 </button>
               </div>
             </div>

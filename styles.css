@@ -1170,6 +1170,304 @@ button:hover {
   opacity: 0.9;
 }
 
+/* Native Bridge - Lovable Layout with SyncPoint Style */
+.bridge-native {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bridge-native-source {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--bg-1);
+  border: 1px solid var(--border-1);
+  border-radius: 12px;
+  transition: all var(--duration-fast) var(--ease-apple);
+}
+
+.bridge-native-source:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sh-card);
+  border-color: var(--border-strong);
+}
+
+.bridge-source-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-soft);
+  border-radius: 10px;
+  color: var(--accent);
+  transition: all var(--duration-fast) var(--ease-apple);
+}
+
+.bridge-native-source:hover .bridge-source-icon {
+  transform: scale(1.1);
+}
+
+.bridge-source-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.bridge-source-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.bridge-source-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--fg-1);
+}
+
+.bridge-source-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 500;
+  transition: color var(--duration-fast) var(--ease-apple);
+}
+
+.bridge-source-link:hover {
+  color: var(--accent-2);
+}
+
+.bridge-native-content {
+  background: var(--bg-1);
+  border: 1px solid var(--border-1);
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 240px;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--duration-fast) var(--ease-apple);
+}
+
+.bridge-native-content::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  transition: background var(--duration-medium) var(--ease-apple);
+}
+
+.bridge-native-content.is-approved::before {
+  background: var(--risk-green);
+}
+
+.bridge-native-content.is-empty::before {
+  display: none;
+}
+
+.bridge-content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.bridge-content-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg-2);
+}
+
+.bridge-empty-native {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  gap: 16px;
+  animation: fadeIn var(--duration-medium) var(--ease-apple-out);
+}
+
+.bridge-empty-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-soft);
+  border-radius: 16px;
+  color: var(--accent);
+  animation: scaleIn var(--duration-medium) var(--ease-spring);
+}
+
+.bridge-empty-content {
+  max-width: 400px;
+}
+
+.bridge-empty-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-1);
+  margin-bottom: 6px;
+}
+
+.bridge-empty-sub {
+  font-size: 13px;
+  color: var(--fg-3);
+  line-height: 1.6;
+}
+
+.bridge-bullets-native {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bridge-bullet-native {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-2);
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--fg-1);
+  transition: all var(--duration-fast) var(--ease-apple);
+  border: 1px solid transparent;
+}
+
+.bridge-bullet-native:hover {
+  background: var(--bg-3);
+  transform: translateX(4px);
+  border-color: var(--border-strong);
+  box-shadow: var(--sh-card);
+}
+
+.bridge-bullet-icon {
+  flex-shrink: 0;
+  margin-top: 6px;
+  color: var(--accent);
+}
+
+.bridge-meta-native {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--border-2);
+  font-size: 12px;
+  color: var(--fg-3);
+}
+
+.bridge-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color var(--duration-fast) var(--ease-apple);
+}
+
+.bridge-meta-item:hover {
+  color: var(--fg-2);
+}
+
+.bridge-meta-item b {
+  color: var(--fg-2);
+  font-weight: 500;
+}
+
+/* Native Bridge Grid for Dedicated Page */
+.bridge-grid-native {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 20px;
+  animation: fadeIn var(--duration-medium) var(--ease-apple-out);
+}
+
+.bridge-card-native {
+  background: var(--bg-1);
+  border: 1px solid var(--border-1);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all var(--duration-medium) var(--ease-apple);
+  position: relative;
+  overflow: hidden;
+}
+
+.bridge-card-native::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 3%, transparent) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-apple);
+}
+
+.bridge-card-native:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--sh-pop);
+  border-color: var(--border-strong);
+}
+
+.bridge-card-native:hover::before {
+  opacity: 1;
+}
+
+.bridge-card-header-native {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.bridge-card-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-soft);
+  border-radius: 12px;
+  color: var(--accent);
+  transition: all var(--duration-fast) var(--ease-apple);
+  flex-shrink: 0;
+}
+
+.bridge-card-native:hover .bridge-card-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.bridge-card-title {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--fg-1);
+}
+
+.bridge-card-body-native {
+  margin-bottom: 20px;
+}
+
+.bridge-card-footer-native {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .sp-btn {
   display: inline-flex; align-items: center; gap: 6px;
   height: 32px;
