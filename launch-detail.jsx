@@ -70,17 +70,22 @@ const ReadinessCard = ({ launch }) => {
   );
 };
 
-// AI Bridge panel — streaming summary + asset suggestions
+// AI Bridge panel — streaming summary + asset suggestions (Lovable.dev style)
 const AIBridge = ({ launch }) => {
   const [phase, setPhase] = React.useState("idle"); // idle | streaming | done
   const [shown, setShown] = React.useState(0);
   const [approved, setApproved] = React.useState(false);
+  const [bouncing, setBouncing] = React.useState(false);
   const totalChars = launch.summary.reduce((a,s) => a + s.length, 0);
 
   const run = () => {
     setPhase("streaming");
     setShown(0);
     setApproved(false);
+    setBouncing(true);
+    
+    // Stop bouncing after animation
+    setTimeout(() => setBouncing(false), 600);
   };
 
   React.useEffect(() => {
@@ -105,69 +110,102 @@ const AIBridge = ({ launch }) => {
 
   return (
     <Section
-      kicker="The Bridge"
-      title="AI Knowledge Extraction"
+      kicker="✨ AI Magic"
+      title="Knowledge Extraction"
       action={
         <div className="bridge-actions">
           {phase === "idle" && (
-            <button className="sp-btn sp-btn-primary" onClick={run}>
-              <Icon name="sparkle" size={13}/> Generate from spec
+            <button 
+              className={`lovable-btn ${bouncing ? 'bouncing' : ''}`} 
+              onClick={run}
+            >
+              <span className="lovable-btn-icon">✨</span>
+              <span>Generate Summary</span>
             </button>
           )}
           {phase === "streaming" && (
-            <button className="sp-btn sp-btn-ghost" disabled>
-              <span className="bridge-spinner"/> Reading PRD-204…
+            <button className="lovable-btn lovely-btn-loading" disabled>
+              <span className="lovable-spinner"/>
+              <span>Dreaming up magic...</span>
             </button>
           )}
           {phase === "done" && !approved && (
             <>
-              <button className="sp-btn sp-btn-ghost" onClick={run}><Icon name="sparkle" size={12}/>Regenerate</button>
-              <button className="sp-btn sp-btn-primary" onClick={() => setApproved(true)}>
-                <Icon name="check" size={13}/> Approve as copy
+              <button className="lovable-btn lovely-btn-secondary" onClick={run}>
+                <span>🔄</span>
+                <span>Regenerate</span>
+              </button>
+              <button className="lovable-btn" onClick={() => setApproved(true)}>
+                <span>✅</span>
+                <span>Approve</span>
               </button>
             </>
           )}
-          {approved && <Pill tone="ok" icon="check">Approved by Marcus L.</Pill>}
+          {approved && (
+            <div className="lovable-approved">
+              <span>🎉</span>
+              <span>Approved!</span>
+            </div>
+          )}
         </div>
       }
     >
-      <div className="bridge">
-        <div className="bridge-source">
-          <Icon name="doc" size={13}/>
-          <span><b>Source:</b> PRD-204 · v1.4 · last edited by Priya S. 2d ago</span>
-          <a href="#" className="bridge-source-link">Open<Icon name="external" size={11}/></a>
+      <div className="lovable-bridge">
+        <div className="lovable-bridge-source">
+          <div className="lovable-source-icon">📄</div>
+          <div className="lovable-source-text">
+            <span className="lovable-source-label">Source</span>
+            <span className="lovable-source-name">PRD-204 · v1.4</span>
+          </div>
+          <a href="#" className="lovable-source-link">Open →</a>
         </div>
 
-        <div className={`bridge-out ${phase === "idle" ? "is-empty" : ""} ${approved ? "is-approved" : ""}`}>
-          <div className="bridge-out-head">
-            <div className="bridge-out-title">
-              {approved ? "Approved copy — User value" : "Draft — User value"}
+        <div className={`lovable-bridge-content ${phase === "idle" ? "is-empty" : ""} ${approved ? "is-approved" : ""}`}>
+          <div className="lovable-content-header">
+            <div className="lovable-content-title">
+              {approved ? "✨ Approved Copy" : "✨ Draft Copy"}
             </div>
-            <Pill tone={approved ? "ok" : "warn"}>
-              {approved ? "Approved" : "Draft · awaiting review"}
-            </Pill>
+            <div className={`lovable-status-badge ${approved ? 'approved' : 'draft'}`}>
+              {approved ? '✓ Ready to ship' : '⏳ Awaiting review'}
+            </div>
           </div>
 
           {phase === "idle" ? (
-            <div className="bridge-empty">
-              <Icon name="sparkle" size={18}/>
-              <div>
-                <div className="bridge-empty-title">No summary yet</div>
-                <div className="bridge-empty-sub">The Bridge will turn PRD-204 into 3–5 marketing-ready bullets. You stay in control — drafts are never auto-published.</div>
+            <div className="lovable-empty-state">
+              <div className="lovable-empty-icon">🤖</div>
+              <div className="lovable-empty-content">
+                <div className="lovable-empty-title">Ready to create magic?</div>
+                <div className="lovable-empty-sub">Click "Generate Summary" to transform your PRD into marketing-ready bullets. You stay in control — drafts are never auto-published.</div>
               </div>
             </div>
           ) : (
-            <ul className="bridge-bullets">
-              {visible.map((s, i) => s ? <li key={i}>{s}</li> : null)}
-            </ul>
+            <div className="lovable-bullets-container">
+              <ul className="lovable-bullets">
+                {visible.map((s, i) => s ? (
+                  <li key={i} className="lovable-bullet">
+                    <span className="lovable-bullet-icon">✨</span>
+                    <span>{s}</span>
+                  </li>
+                ) : null)}
+              </ul>
+            </div>
           )}
         </div>
 
         {phase === "done" && (
-          <div className="bridge-meta">
-            <span><Icon name="git-merge" size={12}/> Inferred from <b>4 commits</b> on <b>main</b></span>
-            <span><Icon name="dot" size={9}/> Tone: <b>Plain · enterprise</b></span>
-            <span><Icon name="dot" size={9}/> Reading level: <b>Grade 9</b></span>
+          <div className="lovable-meta">
+            <div className="lovable-meta-item">
+              <span>🔀</span>
+              <span>Inferred from <strong>4 commits</strong> on <strong>main</strong></span>
+            </div>
+            <div className="lovable-meta-item">
+              <span>🎨</span>
+              <span>Tone: <strong>Plain · enterprise</strong></span>
+            </div>
+            <div className="lovable-meta-item">
+              <span>📖</span>
+              <span>Reading level: <strong>Grade 9</strong></span>
+            </div>
           </div>
         )}
       </div>

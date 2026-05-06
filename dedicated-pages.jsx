@@ -6,33 +6,38 @@ const AIBridgePage = () => {
   return (
     <div className="dedicated-page">
       <div className="page-header">
-        <h1>AI Bridge</h1>
+        <h1>✨ AI Bridge</h1>
         <p className="page-sub">AI-powered knowledge extraction from technical specs</p>
       </div>
       
       <div className="page-content">
-        <div className="bridge-grid">
-          {state.launches.filter(l => l.summary && l.summary.length > 0).map(launch => (
-            <div key={launch.id} className="bridge-card">
-              <div className="bridge-card-header">
-                <div className="bridge-card-title">{launch.name}</div>
-                <Pill tone="ghost">{launch.code}</Pill>
+        <div className="lovable-bridge-grid">
+          {state.launches.filter(l => l.summary && l.summary.length > 0).map((launch, index) => (
+            <div key={launch.id} className="lovable-bridge-card" style={{ animationDelay: `${index * 0.1}s` }}>
+              <div className="lovable-bridge-card-header">
+                <div className="lovable-bridge-card-icon">🚀</div>
+                <div className="lovable-bridge-card-title">{launch.name}</div>
+                <div className="lovable-bridge-card-badge">{launch.code}</div>
               </div>
-              <div className="bridge-card-body">
-                <ul className="bridge-bullets">
+              <div className="lovable-bridge-card-body">
+                <ul className="lovable-bridge-bullets">
                   {launch.summary.map((point, i) => (
-                    <li key={i}>{point}</li>
+                    <li key={i} className="lovable-bridge-bullet">
+                      <span className="lovable-bridge-bullet-icon">✨</span>
+                      <span>{point}</span>
+                    </li>
                   ))}
                 </ul>
               </div>
-              <div className="bridge-card-footer">
+              <div className="lovable-bridge-card-footer">
                 <button 
-                  className="sp-btn sp-btn-ghost"
+                  className="lovable-btn lovely-btn-secondary"
                   onClick={() => {
                     // Would navigate to launch detail with AI Bridge tab
                   }}
                 >
-                  View in launch →
+                  <span>👀</span>
+                  <span>View in launch</span>
                 </button>
               </div>
             </div>
