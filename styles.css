@@ -792,27 +792,12 @@ button:hover {
   padding: 22px;
   background: var(--bg-1);
   transition: all var(--duration-medium) var(--ease-apple);
-  position: relative;
-  overflow: hidden;
-}
-
-.bridge-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 3%, transparent) 0%, transparent 100%);
-  opacity: 0;
-  transition: opacity var(--duration-fast) var(--ease-apple);
 }
 
 .bridge-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   box-shadow: var(--sh-pop);
   border-color: var(--border-strong);
-}
-
-.bridge-card:hover::before {
-  opacity: 1;
 }
 
 .bridge-card-header {
@@ -1189,7 +1174,6 @@ button:hover {
 }
 
 .bridge-native-source:hover {
-  transform: translateY(-2px);
   box-shadow: var(--sh-card);
   border-color: var(--border-strong);
 }
@@ -1200,14 +1184,15 @@ button:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--accent-soft);
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
   border-radius: 10px;
   color: var(--accent);
   transition: all var(--duration-fast) var(--ease-apple);
 }
 
 .bridge-native-source:hover .bridge-source-icon {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .bridge-source-content {
@@ -1256,23 +1241,8 @@ button:hover {
   transition: all var(--duration-fast) var(--ease-apple);
 }
 
-.bridge-native-content::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: linear-gradient(180deg, var(--accent), var(--accent-2));
-  transition: background var(--duration-medium) var(--ease-apple);
-}
-
-.bridge-native-content.is-approved::before {
-  background: var(--risk-green);
-}
-
-.bridge-native-content.is-empty::before {
-  display: none;
+.bridge-native-content.is-approved {
+  border-color: color-mix(in oklab, var(--risk-green) 30%, var(--border-1));
 }
 
 .bridge-content-header {
@@ -1306,7 +1276,8 @@ button:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--accent-soft);
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
   border-radius: 16px;
   color: var(--accent);
   animation: scaleIn var(--duration-medium) var(--ease-spring);
@@ -1354,9 +1325,8 @@ button:hover {
 
 .bridge-bullet-native:hover {
   background: var(--bg-3);
-  transform: translateX(4px);
+  transform: translateX(2px);
   border-color: var(--border-strong);
-  box-shadow: var(--sh-card);
 }
 
 .bridge-bullet-icon {
@@ -1405,27 +1375,12 @@ button:hover {
   border-radius: 12px;
   padding: 24px;
   transition: all var(--duration-medium) var(--ease-apple);
-  position: relative;
-  overflow: hidden;
-}
-
-.bridge-card-native::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 3%, transparent) 0%, transparent 100%);
-  opacity: 0;
-  transition: opacity var(--duration-fast) var(--ease-apple);
 }
 
 .bridge-card-native:hover {
-  transform: translateY(-6px);
+  transform: translateY(-2px);
   box-shadow: var(--sh-pop);
   border-color: var(--border-strong);
-}
-
-.bridge-card-native:hover::before {
-  opacity: 1;
 }
 
 .bridge-card-header-native {
@@ -1441,7 +1396,8 @@ button:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--accent-soft);
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
   border-radius: 12px;
   color: var(--accent);
   transition: all var(--duration-fast) var(--ease-apple);
@@ -1449,7 +1405,7 @@ button:hover {
 }
 
 .bridge-card-native:hover .bridge-card-icon {
-  transform: scale(1.1) rotate(5deg);
+  transform: scale(1.05);
 }
 
 .bridge-card-title {
@@ -2162,7 +2118,7 @@ button:hover {
 .bridge-out {
   border: 1px solid var(--border-1);
   border-radius: 10px;
-  background: linear-gradient(180deg, color-mix(in oklab, var(--accent) 4%, var(--bg-1)) 0%, var(--bg-1) 30%);
+  background: var(--bg-1);
   position: relative;
   overflow: hidden;
   transition: all var(--duration-fast) var(--ease-apple);
@@ -2170,14 +2126,10 @@ button:hover {
 .bridge-out:hover {
   box-shadow: var(--sh-card);
 }
-.bridge-out::before {
-  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+.bridge-out.is-approved {
+  border-color: color-mix(in oklab, var(--risk-green) 30%, var(--border-1));
 }
-.bridge-out.is-approved::before { background: var(--risk-green); }
 .bridge-out.is-empty { background: var(--bg-1); }
-.bridge-out.is-empty::before { display: none; }
 
 .bridge-out-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -2212,7 +2164,7 @@ button:hover {
   transition: all var(--duration-fast) var(--ease-apple);
 }
 .bridge-bullets li:hover {
-  padding-left: 20px;
+  padding-left: 19px;
   color: var(--fg-1);
 }
 .bridge-bullets li::before {
@@ -2222,8 +2174,8 @@ button:hover {
   transition: all var(--duration-fast) var(--ease-apple);
 }
 .bridge-bullets li:hover::before {
-  left: 5px;
-  transform: scale(1.2);
+  left: 4px;
+  transform: scale(1.1);
 }
 
 .bridge-meta {
