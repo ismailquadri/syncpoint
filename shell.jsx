@@ -51,14 +51,51 @@ const Sidebar = ({ active, onNav }) => {
 
       <div className="sp-side-foot">
         <div className="sp-side-user">
-          <button 
-            className="sp-avatar" 
-            style={{ background: "linear-gradient(135deg,#7B6FF0,#3B82F6)" }}
-            onClick={() => setShowProfile(!showProfile)}
-            title="Profile"
-          >
-            ML
-          </button>
+          <div style={{ position: 'relative' }}>
+            <button 
+              className="sp-avatar" 
+              style={{ background: "linear-gradient(135deg,#7B6FF0,#3B82F6)" }}
+              onClick={() => {
+                setShowProfile(!showProfile);
+                setShowNotifications(false);
+              }}
+              title="Profile"
+            >
+              ML
+            </button>
+            
+            {showProfile && (
+              <div className="sp-dropdown sp-dropdown-profile">
+                <div className="sp-dropdown-header">
+                  <div className="sp-avatar" style={{ background: "linear-gradient(135deg,#7B6FF0,#3B82F6)", width: 32, height: 32 }}>ML</div>
+                  <div>
+                    <div className="sp-profile-name">Marcus Lee</div>
+                    <div className="sp-profile-email">marcus@lattice.com</div>
+                  </div>
+                </div>
+                <div className="sp-dropdown-body">
+                  <button className="sp-dropdown-item">
+                    <Icon name="user" size={14}/>
+                    <span>Profile settings</span>
+                  </button>
+                  <button className="sp-dropdown-item">
+                    <Icon name="settings" size={14}/>
+                    <span>Preferences</span>
+                  </button>
+                  <button className="sp-dropdown-item">
+                    <Icon name="help" size={14}/>
+                    <span>Help & support</span>
+                  </button>
+                </div>
+                <div className="sp-dropdown-footer">
+                  <button className="sp-dropdown-item sp-dropdown-item-danger">
+                    <Icon name="logout" size={14}/>
+                    <span>Sign out</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
           <div className="sp-side-user-meta">
             <div className="sp-side-user-name">Marcus Lee</div>
             <div className="sp-side-user-role">Product Marketer</div>
@@ -67,7 +104,10 @@ const Sidebar = ({ active, onNav }) => {
             <button 
               className="sp-icon-btn" 
               title="Notifications"
-              onClick={() => setShowNotifications(!showNotifications)}
+              onClick={() => {
+                setShowNotifications(!showNotifications);
+                setShowProfile(false);
+              }}
             >
               <Icon name="bell" size={14}/>
               <span className="sp-bell-dot"/>
@@ -112,38 +152,6 @@ const Sidebar = ({ active, onNav }) => {
             )}
           </div>
         </div>
-        
-        {showProfile && (
-          <div className="sp-dropdown sp-dropdown-profile">
-            <div className="sp-dropdown-header">
-              <div className="sp-avatar" style={{ background: "linear-gradient(135deg,#7B6FF0,#3B82F6)", width: 32, height: 32 }}>ML</div>
-              <div>
-                <div className="sp-profile-name">Marcus Lee</div>
-                <div className="sp-profile-email">marcus@lattice.com</div>
-              </div>
-            </div>
-            <div className="sp-dropdown-body">
-              <button className="sp-dropdown-item">
-                <Icon name="user" size={14}/>
-                <span>Profile settings</span>
-              </button>
-              <button className="sp-dropdown-item">
-                <Icon name="settings" size={14}/>
-                <span>Preferences</span>
-              </button>
-              <button className="sp-dropdown-item">
-                <Icon name="help" size={14}/>
-                <span>Help & support</span>
-              </button>
-            </div>
-            <div className="sp-dropdown-footer">
-              <button className="sp-dropdown-item sp-dropdown-item-danger">
-                <Icon name="logout" size={14}/>
-                <span>Sign out</span>
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     </aside>
   );
