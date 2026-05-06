@@ -244,12 +244,8 @@ const Dashboard = ({ launches, onOpen, density, view }) => {
   const { state, dispatch } = useStateContext();
 
   const handleViewChange = (newView) => {
-    dispatch({ type: "SET_LOADING", payload: { isLoading: true, message: "Switching view..." } });
-    setTimeout(() => {
-      dispatch({ type: "SET_VIEW", payload: newView });
-      dispatch({ type: "SET_LOADING", payload: { isLoading: false } });
-    }, 300);
-  };
+  dispatch({ type: "SET_VIEW", payload: newView });
+};
 
   return (
     <div className="dash">
