@@ -385,7 +385,6 @@ button:hover {
   position: absolute; top: 6px; right: 6px;
   width: 6px; height: 6px; border-radius: 50%;
   background: var(--risk-red);
-  box-shadow: 0 0 0 2px var(--bg-1);
 }
 
 /* Dropdowns */
@@ -397,7 +396,6 @@ button:hover {
   background: var(--bg-1);
   border: 1px solid var(--border-1);
   border-radius: 12px;
-  box-shadow: var(--sh-pop);
   z-index: 100;
   animation: fadeInUp var(--duration-medium) var(--ease-apple-out);
 }
@@ -559,7 +557,6 @@ button:hover {
   background: var(--bg-1); 
   border-color: var(--border-strong);
   transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: all var(--duration-fast) var(--ease-apple);
 }
 .sp-search input {
@@ -616,7 +613,6 @@ button:hover {
   height: calc(100vh - 52px);
   display: flex;
   flex-direction: column;
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
   animation: slideInRight var(--duration-medium) var(--ease-apple-out);
 }
 
@@ -760,7 +756,6 @@ button:hover {
   max-width: 90vw;
   background: var(--bg-1);
   border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   max-height: 400px;
@@ -916,7 +911,6 @@ button:hover {
 
 .bridge-card:hover {
   transform: translateY(-3px);
-  box-shadow: var(--sh-pop);
   border-color: var(--border-strong);
 }
 
@@ -1097,7 +1091,6 @@ button:hover {
 .modal {
   background: var(--bg-1);
   border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   width: 600px;
   max-width: 90vw;
   max-height: 90vh;
@@ -1294,7 +1287,7 @@ button:hover {
 }
 
 .bridge-native-source:hover {
-  box-shadow: var(--sh-card);
+  background: var(--bg-3);
   border-color: var(--border-strong);
 }
 
@@ -1495,12 +1488,6 @@ button:hover {
   border-radius: 12px;
   padding: 24px;
   transition: all var(--duration-medium) var(--ease-apple);
-}
-
-.bridge-card-native:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--sh-pop);
-  border-color: var(--border-strong);
 }
 
 .bridge-card-header-native {
@@ -1790,7 +1777,6 @@ button:hover {
 .lrow:last-child { border-bottom: 0; }
 .lrow:hover {
   background: var(--bg-2);
-  box-shadow: var(--sh-card);
 }
 .lrow:active {
   background: var(--bg-3);
@@ -1798,7 +1784,6 @@ button:hover {
 }
 .lrow.is-active {
   background: var(--accent-soft);
-  box-shadow: var(--sh-card);
 }
 
 .lrow-code {
@@ -2042,7 +2027,6 @@ button:hover {
 
 .tl-bar:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 6px 16px rgba(0,0,0,.15);
 }
 .tl-bar-name { font-weight: 500; overflow: hidden; text-overflow: ellipsis; }
 .tl-bar-readiness {
@@ -2151,7 +2135,6 @@ button:hover {
   opacity: 1;
 }
 .kb-card:hover { 
-  box-shadow: var(--sh-pop); 
   transform: translateY(-4px) scale(1.02);
 }
 
@@ -2373,7 +2356,6 @@ button:hover {
   transition: all var(--duration-fast) var(--ease-apple);
 }
 .bridge-out:hover {
-  box-shadow: var(--sh-card);
 }
 .bridge-out.is-approved {
   border-color: color-mix(in oklab, var(--risk-green) 30%, var(--border-1));
@@ -2621,4 +2603,4 @@ button:hover {
   border-radius: 5px;
   display: inline-flex; align-items: center; gap: 5px;
 }
-.view-switch button.is-active { background: var(--bg-1); color: var(--fg-1); box-shadow: var(--sh-card); }
+.view-switch button.is-active { background: var(--bg-1); color: var(--fg-1); }

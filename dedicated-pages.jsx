@@ -1,7 +1,12 @@
 // Dedicated Navigation Pages — AI Bridge, Dependencies, Activity
 
 const AIBridgePage = () => {
-  const { state } = useStateContext();
+  const { state, dispatch } = useStateContext();
+  
+  const handleViewInLaunch = (launchId) => {
+    dispatch({ type: "SET_OPEN_LAUNCH", payload: launchId });
+    dispatch({ type: "SET_ACTIVE_NAV", payload: "home" });
+  };
   
   return (
     <div className="dedicated-page">
@@ -31,10 +36,8 @@ const AIBridgePage = () => {
               </div>
               <div className="bridge-card-footer-native">
                 <button 
-                  className="sp-btn sp-btn-ghost animate-scale"
-                  onClick={() => {
-                    // Would navigate to launch detail with AI Bridge tab
-                  }}
+                  className="sp-btn sp-btn-ghost"
+                  onClick={() => handleViewInLaunch(launch.id)}
                 >
                   View in launch <Icon name="arrow-right" size={12}/>
                 </button>
