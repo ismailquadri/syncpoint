@@ -178,7 +178,7 @@ const QuarterTimeline = ({ launches, onOpen, density }) => {
                 {/* bar */}
                 <button
                   className={`tl-bar tl-bar-${l.risk}`}
-                  style={{ left: `${leftPct}%`, width: `${widthPct}%` }}
+                  style={{ left: `${leftPct}%`, width: `${widthPct}%`, animationDelay: `${idx * 0.08}s` }}
                   onClick={(e) => { e.stopPropagation(); onOpen(l.id); }}
                   title={l.name}
                 >

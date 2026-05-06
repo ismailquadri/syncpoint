@@ -1,6 +1,8 @@
 // Sidebar + topbar — app shell
 
 const Sidebar = ({ active, onNav }) => {
+  const [showNotifications, setShowNotifications] = React.useState(false);
+  const [showProfile, setShowProfile] = React.useState(false);
   return (
     <aside className="sp-sidebar">
       <div className="sp-brand">
@@ -49,16 +51,99 @@ const Sidebar = ({ active, onNav }) => {
 
       <div className="sp-side-foot">
         <div className="sp-side-user">
-          <div className="sp-avatar" style={{ background: "linear-gradient(135deg,#7B6FF0,#3B82F6)" }}>ML</div>
+          <button 
+            className="sp-avatar" 
+            style={{ background: "linear-gradient(135deg,#7B6FF0,#3B82F6)" }}
+            onClick={() => setShowProfile(!showProfile)}
+            title="Profile"
+          >
+            ML
+          </button>
           <div className="sp-side-user-meta">
             <div className="sp-side-user-name">Marcus Lee</div>
             <div className="sp-side-user-role">Product Marketer</div>
           </div>
-          <button className="sp-icon-btn" title="Notifications">
-            <Icon name="bell" size={14}/>
-            <span className="sp-bell-dot"/>
-          </button>
+          <div style={{ position: 'relative' }}>
+            <button 
+              className="sp-icon-btn" 
+              title="Notifications"
+              onClick={() => setShowNotifications(!showNotifications)}
+            >
+              <Icon name="bell" size={14}/>
+              <span className="sp-bell-dot"/>
+            </button>
+            
+            {showNotifications && (
+              <div className="sp-dropdown sp-dropdown-notifications">
+                <div className="sp-dropdown-header">Notifications</div>
+                <div className="sp-dropdown-body">
+                  <div className="sp-notification-item">
+                    <div className="sp-notification-icon" style={{ background: 'color-mix(in oklab, var(--risk-green) 15%, transparent)' }}>
+                      <Icon name="check" size={12}/>
+                    </div>
+                    <div className="sp-notification-content">
+                      <div className="sp-notification-title">Glide launched successfully</div>
+                      <div className="sp-notification-time">2 hours ago</div>
+                    </div>
+                  </div>
+                  <div className="sp-notification-item">
+                    <div className="sp-notification-icon" style={{ background: 'color-mix(in oklab, var(--risk-yellow) 15%, transparent)' }}>
+                      <Icon name="alert" size={12}/>
+                    </div>
+                    <div className="sp-notification-content">
+                      <div className="sp-notification-title">Atlas readiness dropped to 65%</div>
+                      <div className="sp-notification-time">5 hours ago</div>
+                    </div>
+                  </div>
+                  <div className="sp-notification-item">
+                    <div className="sp-notification-icon" style={{ background: 'color-mix(in oklab, var(--accent) 15%, transparent)' }}>
+                      <Icon name="sparkle" size={12}/>
+                    </div>
+                    <div className="sp-notification-content">
+                      <div className="sp-notification-title">AI summary generated for Nimbus</div>
+                      <div className="sp-notification-time">1 day ago</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="sp-dropdown-footer">
+                  <button className="sp-btn sp-btn-ghost sp-btn-sm">Mark all as read</button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
+        
+        {showProfile && (
+          <div className="sp-dropdown sp-dropdown-profile">
+            <div className="sp-dropdown-header">
+              <div className="sp-avatar" style={{ background: "linear-gradient(135deg,#7B6FF0,#3B82F6)", width: 32, height: 32 }}>ML</div>
+              <div>
+                <div className="sp-profile-name">Marcus Lee</div>
+                <div className="sp-profile-email">marcus@lattice.com</div>
+              </div>
+            </div>
+            <div className="sp-dropdown-body">
+              <button className="sp-dropdown-item">
+                <Icon name="user" size={14}/>
+                <span>Profile settings</span>
+              </button>
+              <button className="sp-dropdown-item">
+                <Icon name="settings" size={14}/>
+                <span>Preferences</span>
+              </button>
+              <button className="sp-dropdown-item">
+                <Icon name="help" size={14}/>
+                <span>Help & support</span>
+              </button>
+            </div>
+            <div className="sp-dropdown-footer">
+              <button className="sp-dropdown-item sp-dropdown-item-danger">
+                <Icon name="logout" size={14}/>
+                <span>Sign out</span>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </aside>
   );

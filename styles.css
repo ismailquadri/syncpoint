@@ -364,6 +364,12 @@ button:hover {
   width: 30px; height: 30px; border-radius: 50%;
   display: grid; place-items: center;
   color: #fff; font-weight: 600; font-size: 11px; letter-spacing: .02em;
+  border: none;
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-apple);
+}
+.sp-avatar:hover {
+  transform: scale(1.05);
 }
 .sp-side-user-name { font-size: 12px; font-weight: 600; line-height: 1.2; }
 .sp-side-user-role { font-size: 10.5px; color: var(--fg-3); }
@@ -371,6 +377,7 @@ button:hover {
   width: 26px; height: 26px; border-radius: 6px;
   border: 0; background: transparent; color: var(--fg-3);
   display: grid; place-items: center; position: relative;
+  cursor: pointer;
 }
 .sp-icon-btn:hover { background: var(--bg-3); color: var(--fg-1); }
 .sp-bell-dot {
@@ -378,6 +385,134 @@ button:hover {
   width: 6px; height: 6px; border-radius: 50%;
   background: var(--risk-red);
   box-shadow: 0 0 0 2px var(--bg-1);
+}
+
+/* Dropdowns */
+.sp-dropdown {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  width: 280px;
+  background: var(--bg-1);
+  border: 1px solid var(--border-1);
+  border-radius: 12px;
+  box-shadow: var(--sh-pop);
+  z-index: 100;
+  animation: fadeInUp var(--duration-medium) var(--ease-apple-out);
+}
+
+.sp-dropdown-profile {
+  bottom: auto;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 240px;
+}
+
+.sp-dropdown-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sp-dropdown-body {
+  padding: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.sp-dropdown-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-2);
+}
+
+.sp-dropdown-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--fg-1);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-apple);
+  text-align: left;
+}
+
+.sp-dropdown-item:hover {
+  background: var(--bg-2);
+}
+
+.sp-dropdown-item-danger {
+  color: var(--risk-red);
+}
+
+.sp-dropdown-item-danger:hover {
+  background: color-mix(in oklab, var(--risk-red) 8%, transparent);
+}
+
+/* Notification items */
+.sp-notification-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  transition: background var(--duration-fast) var(--ease-apple);
+  cursor: pointer;
+}
+
+.sp-notification-item:hover {
+  background: var(--bg-2);
+}
+
+.sp-notification-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--fg-1);
+}
+
+.sp-notification-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.sp-notification-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--fg-1);
+  margin-bottom: 2px;
+  line-height: 1.4;
+}
+
+.sp-notification-time {
+  font-size: 11px;
+  color: var(--fg-3);
+}
+
+.sp-profile-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg-1);
+}
+
+.sp-profile-email {
+  font-size: 11px;
+  color: var(--fg-3);
+}
+
+.sp-btn-sm {
+  height: 28px;
+  font-size: 12px;
+  padding: 0 12px;
 }
 
 /* ============= TOPBAR ============= */
@@ -1667,33 +1802,18 @@ button:hover {
   overflow: hidden;
 }
 
-.lrow::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--accent);
-  transform: scaleY(0);
-  transition: transform var(--duration-fast) var(--ease-apple);
-}
-
-.lrow:hover::before {
-  transform: scaleY(1);
-}
-
 .lrow:last-child { border-bottom: 0; }
-.lrow:hover { 
-  background: var(--bg-2); 
-  transform: translateX(4px);
+.lrow:hover {
+  background: var(--bg-2);
+  box-shadow: var(--sh-card);
 }
 .lrow:active {
-  transform: translateX(2px) scale(0.99);
+  background: var(--bg-3);
+  transform: scale(0.995);
 }
-.lrow.is-active { 
-  background: var(--accent-soft); 
-  transform: translateX(0);
+.lrow.is-active {
+  background: var(--accent-soft);
+  box-shadow: var(--sh-card);
 }
 
 .lrow-code {
@@ -1726,12 +1846,30 @@ button:hover {
   background: var(--bg-2);
   border-radius: 999px;
   overflow: hidden;
+  position: relative;
 }
 .lrow-bar-fill {
   height: 100%;
   background: var(--fg-1);
   border-radius: 999px;
-  transition: width .4s;
+  transition: width 0.6s var(--ease-apple-out);
+  position: relative;
+  overflow: hidden;
+}
+.lrow-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 .lrow-readiness-num {
   display: flex; align-items: baseline; gap: 6px;
@@ -1831,14 +1969,32 @@ button:hover {
   white-space: nowrap;
   overflow: hidden;
   cursor: pointer;
-  transition: transform .12s, box-shadow .12s;
+  transition: all var(--duration-fast) var(--ease-apple);
+  animation: barEntrance 0.4s var(--ease-apple-out) forwards;
+  opacity: 0;
+  transform: translateY(4px);
 }
-.tl-bar:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,.12); }
+
+@keyframes barEntrance {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tl-bar:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(0,0,0,.15);
+}
 .tl-bar-name { font-weight: 500; overflow: hidden; text-overflow: ellipsis; }
 .tl-bar-readiness {
   margin-left: auto;
   font-variant-numeric: tabular-nums;
   opacity: .85; font-size: 11px;
+  transition: opacity var(--duration-fast) var(--ease-apple);
+}
+.tl-bar:hover .tl-bar-readiness {
+  opacity: 1;
 }
 .tl-bar-end {
   position: absolute; top: 0; right: 0; bottom: 0; width: 4px;
