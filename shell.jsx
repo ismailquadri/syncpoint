@@ -3,6 +3,12 @@
 const Sidebar = ({ active, onNav }) => {
   const [showNotifications, setShowNotifications] = React.useState(false);
   const [showProfile, setShowProfile] = React.useState(false);
+  const { dispatch } = useStateContext();
+  
+  const openCommandPalette = () => {
+    dispatch({ type: "OPEN_COMMAND_PALETTE" });
+  };
+  
   return (
     <aside className="sp-sidebar">
       <div className="sp-brand">
@@ -17,7 +23,7 @@ const Sidebar = ({ active, onNav }) => {
           <div className="sp-brand-name">SyncPoint</div>
           <div className="sp-brand-org">Lattice · Q2</div>
         </div>
-        <button className="sp-cmd" title="Command palette (⌘K)">
+        <button className="sp-cmd" title="Command palette (⌘K)" onClick={openCommandPalette}>
           <Icon name="command" size={12}/>
         </button>
       </div>

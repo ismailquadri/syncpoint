@@ -33,8 +33,8 @@ const FilterPanel = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="filter-panel-backdrop">
-      <div ref={panelRef} className="filter-panel">
+    <div className="filter-panel-backdrop" onClick={onClose}>
+      <div ref={panelRef} className="filter-panel" onClick={e => e.stopPropagation()}>
         <div className="filter-panel-header">
           <h3>Filters</h3>
           <button className="filter-panel-close" onClick={onClose}>

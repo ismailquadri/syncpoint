@@ -206,16 +206,16 @@ const NewLaunchModal = ({ isOpen, onClose }) => {
               onChange={e => handleChange("description", e.target.value)}
             />
           </div>
-        </form>
 
-        <div className="modal-footer">
-          <button className="sp-btn sp-btn-ghost" onClick={onClose}>
-            Cancel
-          </button>
-          <button className="sp-btn sp-btn-primary" onClick={handleSubmit}>
-            <Icon name="plus" size={13}/> Create Launch
-          </button>
-        </div>
+          <div className="modal-footer">
+            <button type="button" className="sp-btn sp-btn-ghost" onClick={onClose}>
+              Cancel
+            </button>
+            <button type="submit" className="sp-btn sp-btn-primary">
+              <Icon name="plus" size={13}/> Create Launch
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
